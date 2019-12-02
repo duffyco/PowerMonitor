@@ -1,0 +1,22 @@
+PowerMeter - A set of scripts that read the ACMtty0 which is connected to an IR reader.   This produces a set of graphs to monitor power costs.
+
+#on Init
+
+insmod /lib/modules/2.6.22.19/kernel/drivers/usb/usbserial.ko
+insmod /lib/modules/2.6.22.19/kernel/drivers/usb/ftdi_sio.ko
+insmod /lib/modules/2.6.22.19/kernel/drivers/usb/cdc-acm.ko
+
+ln -s /mnt/ADATA_UFD/ /mnt/sdb1
+
+mount -o bind /mnt/sdb1/opt /opt
+
+#cru a DailyPower "10 3 * * *" /mnt/sdb1/power/powerHelper.sh daily.py
+#cru a YesterdayPower "10 4 * * *" /mnt/sdb1/power/powerHelper.sh hourly-yesterday.py
+#cru a HourlyPower "*/15 * * * *" /mnt/sdb1/power/powerHelper.sh hourly.py
+#cru a MinutePower "*/2 * * * *" /mnt/sdb1/power/powerHelper.sh minute.py
+#cru a RestartReader "*/1 * * * *" /mnt/sdb1/power/startReaderProcess.sh
+
+startReaderProcess.sh
+
+#on Wan Up
+stty -F /dev/ttyACM0 raw
